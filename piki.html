@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English-Hebrew Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .word { font-size: 24px; margin: 20px; }
+        .options { display: flex; flex-direction: column; align-items: center; }
+        button { margin: 5px; padding: 10px; font-size: 18px; cursor: pointer; }
+        .correct { color: green; }
+        .wrong { color: red; }
+        #score { font-size: 20px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>English-Hebrew Quiz</h1>
+    <p id="score">Score: 0</p>
+    <div class="word" id="word"></div>
+    <div class="options" id="options"></div>
+    <p id="result"></p>
+    <button onclick="newQuestion()">Next</button>
+
+    <script>
+        const words = [
+            {"english": "at once", "hebrew": " מייד"},
+{"english": "blood", "hebrew": "דם"},
+{"english": "body", "hebrew": "גופה"},
+{"english": "by chance", "hebrew": "במקרה"},
+{"english": "carpet", "hebrew": "שטיח"},
+{"english": "carry out", "hebrew": "לבצע"},
+{"english": "crime", "hebrew": "פשע"},
+{"english": "criminal", "hebrew": "פושע"},
+{"english": "dirt", "hebrew": "לכלוך"},
+{"english": "evidence", "hebrew": "ראיות עדות"},
+{"english": "gather", "hebrew": "לאסוף"},
+{"english": "guilty", "hebrew": "אשם"},
+{"english": "indicate", "hebrew": "להצביע"},
+{"english": "jail", "hebrew": "כלא"},
+{"english": "link", "hebrew": "לקשור"},
+{"english": "murder", "hebrew": "רצח"},
+{"english": "predict", "hebrew": "לנבא"},
+{"english": "cancer", "hebrew": "סרטן"},
+{"english": "human being", "hebrew": "בן אנוש"},
+{"english": "illness", "hebrew": "מחלה"},
+{"english": "individual", "hebrew": "יחיד, אישי"},
+{"english": "medicine", "hebrew": "תרופה"},
+{"english": "process", "hebrew": "תהליך"},
+{"english": "puzzle", "hebrew": "פזל, חידה"},
+{"english": "supply", "hebrew": "לספק"},
+{"english": "acknoledge", "hebrew": "להודות ש-"},
+{"english": "amaze", "hebrew": "להדהים"},
+{"english": "gold", "hebrew": "זהב"},
+{"english": "look forward to", "hebrew": "לצפות ל-"},
+{"english": "mostly", "hebrew": "לרוב, בעיקר"},
+{"english": "ownership", "hebrew": "בעלות"},
+{"english": "pleasant", "hebrew": "נעים"},
+{"english": "prison", "hebrew": "כלא"},
+{"english": "represent", "hebrew": "לייצג"},
+{"english": "theirs", "hebrew": "שלהם"},
+{"english": "arrest", "hebrew": "לעצור"},
+{"english": "court", "hebrew": "בית משפט"},
+{"english": "expirience", "hebrew": "חוויה"},
+{"english": "framework", "hebrew": "מסגרת"},
+{"english": "grant", "hebrew": "להעניק"},
+{"english": "hate", "hebrew": "שנאה"},
+{"english": "holocaust", "hebrew": "שואה"},
+{"english": "museum", "hebrew": "מוזיאון"},
+{"english": "race", "hebrew": "גזע"},
+{"english": "racial", "hebrew": "שקשור לגזע"},
+{"english": "relating to", "hebrew": "נוגע ל-"},
+{"english": "religious", "hebrew": "דתי"},
+{"english": "right away", "hebrew": "מייד"},
+{"english": "rights", "hebrew": "זכויות"},
+{"english": "trial", "hebrew": "משפט"}
+        ];
+
+        let usedWords = [];
+        let score = 0;
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function newQuestion() {
+            if (usedWords.length === words.length) {
+                alert("Game Over! You've completed all words.");
+                return;
+            }
+
+            document.getElementById("result").innerText = "";
+            
+            let question;
+            do {
+                question = words[Math.floor(Math.random() * words.length)];
+            } while (usedWords.includes(question.english));
+            
+            usedWords.push(question.english);
+            document.getElementById("word").innerText = question.english;
+            
+            let options = shuffle([...words]).slice(0, 3).map(w => w.hebrew);
+            if (!options.includes(question.hebrew)) {
+                options.push(question.hebrew);
+            }
+            options = shuffle(options);
+            
+            document.getElementById("options").innerHTML = "";
+            options.forEach(option => {
+                const btn = document.createElement("button");
+                btn.innerText = option;
+                btn.onclick = () => checkAnswer(option, question.hebrew);
+                document.getElementById("options").appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            const result = document.getElementById("result");
+            if (selected === correct) {
+                result.innerText = "Correct!";
+                result.className = "correct";
+                score++;
+            } else {
+                result.innerText = "Wrong. Try again.";
+                result.className = "wrong";
+                if (score > 0) score--;
+            }
+            document.getElementById("score").innerText = "Score: " + score;
+        }
+
+        newQuestion();
+    </script>
+</body>
+</html>
